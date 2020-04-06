@@ -6,13 +6,13 @@
 #include <signal.h>
 #include <sys/types.h>
 
-#define MAX_OUTPUT 10000
+#define MAX_OUTPUT 1000
 #define PID_LEN 5
 #define PATH_LEN 2500
 #define PROCESS_DATA_LEN 30000
 
 struct ProcessData {
-	char fullStr[1000];
+	char fullStr[MAX_OUTPUT];
 	char pid[40];
 	char path[PATH_LEN];
 	bool isKilled; 
