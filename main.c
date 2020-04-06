@@ -3,17 +3,15 @@
 #include <string.h>
 #include <stdbool.h>
 #include <unistd.h>
-#include <signal.h>
-#include <sys/types.h>
 
 #define MAX_OUTPUT 1000
-#define PID_LEN 5
+#define PID_LEN 40
 #define PATH_LEN 2500
 #define PROCESS_DATA_LEN 30000
 
 struct ProcessData {
 	char fullStr[MAX_OUTPUT];
-	char pid[40];
+	char pid[PID_LEN];
 	char path[PATH_LEN];
 	bool isKilled; 
 };
