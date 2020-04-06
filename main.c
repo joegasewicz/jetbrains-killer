@@ -20,6 +20,17 @@ struct ProcessData {
 	bool isKilled; 
 };
 
+const char ides[9][9] = {
+	"pycharm",
+	"webstorm",
+	"clion",
+	"phpstorm",
+	"datagrip",
+	"intellij",
+	"goland",
+	"ryder"
+};
+
 
 int main()
 {
