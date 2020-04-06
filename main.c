@@ -7,7 +7,11 @@
 #define MAX_OUTPUT 1000
 #define PID_LEN 40
 #define PATH_LEN 2500
-#define PROCESS_DATA_LEN 30000
+#define PROCESS_DATA_LEN 1000
+#define JETBRAINS_IDES_LEN 10
+// Macros
+#define SIZE_OF_PROCESS_DATA_ARRAY(x) (sizeof(x)/sizeof((x)[0]))
+
 
 struct ProcessData {
 	char fullStr[MAX_OUTPUT];
@@ -20,14 +24,13 @@ struct ProcessData {
 int main()
 {
 	FILE *psOutP;
-	char processData[1000];
-	struct ProcessData processDataArray[1000];
+	char processData[PROCESS_DATA_LEN];
+	struct ProcessData processDataArray[PROCESS_DATA_LEN];
 	int counter = 0;
-        char *c;
         const char token[10] = "pycharm";
         char *hasToken;
         char pid[30];
-	char killCommand[20] = "sudo kill -9 "; 
+	char killCommand[20] = "sudo kill -9 ";
 
 	psOutP = popen("ps -A", "r");
 	
@@ -61,10 +64,13 @@ int main()
 		}
 		if(strlen(processDataArray[counter].fullStr) != 0) break;
 	}
-
+	
+	if(SIZE_OF_PROCESS_DATA_ARRAY(processDataArray) > 0)
+	{
+		pclose(psOutP);
+        	strncat(killCommand, processDataArray[1].pid, 20);
+        	system(killCommand);
+	}
 		
-	pclose(psOutP);
-	strncat(killCommand, processDataArray[1].pid, 20);
-	system(killCommand);
 	return 0;
 }
