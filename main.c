@@ -10,7 +10,7 @@
 #define PROCESS_DATA_LEN 1000
 #define JETBRAINS_IDES_LEN 10
 #define IDE_NAME_LEN 9
-
+#define DEBUG true
 #define SIZE_OF_PROCESS_DATA_ARRAY(x) (sizeof(x)/sizeof((x)[0]))
 #define SIZE_OF_IDES(i) (sizeof(i)/sizeof((i)[0]))
 
@@ -19,7 +19,8 @@ struct ProcessData {
 	char fullStr[MAX_OUTPUT];
 	char pid[PID_LEN];
 	char path[PATH_LEN];
-	bool isKilled; 
+	bool isKilled;
+	char ideName[9];
 };
 
 const char ides[][IDE_NAME_LEN] = {
@@ -46,6 +47,11 @@ int compareProcessOutputToToken(const char ideTokens[], char *processStr, char *
 		compareData->tokenName  = malloc(strlen(ideTokens) + 1);
 		compareData->processStr = malloc(strlen(processStr) + 1);
 		strcpy(compareData->tokenName, ideTokens);
+		// Remove any whitespace from start of the path
+		if(processStr[0] == ' ')
+		{
+			memmove(processStr, processStr+1, strlen(processStr));
+		}
 	        strcpy(compareData->processStr, processStr);
 		return 0;	
 	}
@@ -92,6 +98,7 @@ int main()
 					} 
 					else 
 					{
+						strcpy(processDataArray[counter].ideName, compareResults.tokenName);
 						strcpy(processDataArray[counter].fullStr, compareResults.processStr);
         				        strcpy(processDataArray[counter].pid, pid);
 						counter += 1;
@@ -100,8 +107,8 @@ int main()
 				}
 			}
 
-		}
-				if(strlen(processDataArray[counter].fullStr) != 0) break;
+		}	
+		if(strlen(processDataArray[counter].fullStr) != 0) break;
 	}
 	
 	if(SIZE_OF_PROCESS_DATA_ARRAY(processDataArray) > 0)
@@ -112,8 +119,18 @@ int main()
 			{
 				pclose(psOutP);
         			strncat(killCommand, processDataArray[i].pid, 20);
-				printf("now ------> %s\n", killCommand);
         			system(killCommand);
+				if(DEBUG == true)
+				{
+					printf("// ----------------------------------- //\n");
+					printf("//   	Jetbrains Killer debug mode    //\n");
+					printf("// ----------------------------------- //\n");
+					printf("\n");
+					printf("| path |\t%s\n", processDataArray[i].fullStr);
+					printf("| pid |\t%s\n", processDataArray[i].pid);
+					printf("| command |\t%s\n", killCommand);
+				}
+
 
 			}
 		}
