@@ -68,6 +68,7 @@ int main()
         char *hasToken;
         char pid[30];
 	char killCommand[20] = "sudo kill -9 ";
+	char *killExec[20];
 	psOutP = popen("ps -A", "r");
 	
 	if(psOutP == NULL)
@@ -94,7 +95,7 @@ int main()
 		       		{
 					if (compareResults.processStr[i] != ' ')
 			       		{
-						strncat(pid, compareResults.processStr, 1);
+						strncat(pid, &compareResults.processStr[i], 1);
 					} 
 					else 
 					{
@@ -110,15 +111,17 @@ int main()
 		}	
 		if(strlen(processDataArray[counter].fullStr) != 0) break;
 	}
-	
-	if(SIZE_OF_PROCESS_DATA_ARRAY(processDataArray) > 0)
+
+	// Close popen proccess
+	pclose(psOutP);
+
+	if(SIZE_OF_PROCESS_DATA_ARRAY(processDataArray))
 	{
 		for(int i = 0; i < SIZE_OF_PROCESS_DATA_ARRAY(processDataArray); i++) 
 		{
 			if(strlen(processDataArray[i].pid))
-			{
-				pclose(psOutP);
-        			strncat(killCommand, processDataArray[i].pid, 20);
+			{		
+				strncat(killCommand, processDataArray[i].pid, 20);
         			system(killCommand);
 				if(DEBUG == true)
 				{
