@@ -56,7 +56,7 @@ int main()
 {
 	FILE *psOutP;
 	char processData[PROCESS_DATA_LEN];
-	struct ProcessData processDataArray[IDE_NAME_LEN];
+	struct ProcessData processDataArray[PROCESS_DATA_LEN];
 	int counter = 0;
         const char token[10] = "pycharm";
         char *hasToken;
@@ -73,9 +73,6 @@ int main()
 
 	while(fgets(processData, MAX_OUTPUT, psOutP) != NULL)
 	{
-		// CompareData struct is a temporary storage for the current path string
-		// being tested. With each iteration it will reallocate the path value to the
-		// same address.
 		int isAssigned;
 		CompareData compareResults;
 
@@ -86,15 +83,15 @@ int main()
 			{
 				for(int i = 0; i < strlen(compareResults.processStr); i++)
 		       		{
-					if (compareResults.processStr[i] != ' ')
+					if (compareResults.processStr)[i] != ' ')
 			       		{
-						strncat(pid, compareResults.processStr, 1);
+						strncat(pid, &compareResults.processStr)[i], 1);
 					} 
 					else 
 					{
+						counter += 1;
 						strcpy(processDataArray[counter].fullStr, compareResults.processStr);
         				        strcpy(processDataArray[counter].pid, pid);
-						counter += 1;
 						break;
 					}
 				}
@@ -106,17 +103,9 @@ int main()
 	
 	if(SIZE_OF_PROCESS_DATA_ARRAY(processDataArray) > 0)
 	{
-		for(int i = 0; i < SIZE_OF_PROCESS_DATA_ARRAY(processDataArray); i++) 
-		{
-			if(strlen(processDataArray[i].pid))
-			{
-				pclose(psOutP);
-        			strncat(killCommand, processDataArray[i].pid, 20);
-				printf("now ------> %s\n", killCommand);
-        			system(killCommand);
-
-			}
-		}
+		pclose(psOutP);
+        	strncat(killCommand, processDataArray[1].pid, 20);
+        	system(killCommand);
 	}
 		
 	return 0;
