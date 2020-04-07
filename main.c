@@ -39,11 +39,14 @@ typedef struct CompareDatas {
 	char *processStr;
 } CompareData;
 
+int IDE_COUNT = 0;
+
 int compareProcessOutputToToken(const char ideTokens[], char *processStr, char *tokenResult, CompareData *compareData)
 {
 	tokenResult = strstr(processStr, ideTokens);
 	if(tokenResult != NULL)
 	{
+		IDE_COUNT +=1; 
 		compareData->tokenName  = malloc(strlen(ideTokens) + 1);
 		compareData->processStr = malloc(strlen(processStr) + 1);
 		strcpy(compareData->tokenName, ideTokens);
@@ -66,9 +69,7 @@ int main()
 	int counter = 0;
         const char token[10] = "pycharm";
         char *hasToken;
-        char pid[30];
-	char killCommand[20] = "sudo kill -9 ";
-	char *killExec[20];
+        char pid[6];
 	psOutP = popen("ps -A", "r");
 	
 	if(psOutP == NULL)
@@ -103,6 +104,7 @@ int main()
 						strcpy(processDataArray[counter].fullStr, compareResults.processStr);
         				        strcpy(processDataArray[counter].pid, pid);
 						counter += 1;
+						memset(pid, 0, 6);
 						break;
 					}
 				}
@@ -115,23 +117,28 @@ int main()
 	// Close popen proccess
 	pclose(psOutP);
 
+	if(DEBUG == true)
+	{
+		printf("// ----------------------------------- //\n");
+		printf("//   	Jetbrains Killer debug mode    //\n");
+		printf("// ----------------------------------- //\n");
+	}
+
 	if(SIZE_OF_PROCESS_DATA_ARRAY(processDataArray))
 	{
 		for(int i = 0; i < SIZE_OF_PROCESS_DATA_ARRAY(processDataArray); i++) 
 		{
 			if(strlen(processDataArray[i].pid))
-			{		
+			{
+				char killCommand[20] = "sudo kill -9 ";
 				strncat(killCommand, processDataArray[i].pid, 20);
         			system(killCommand);
 				if(DEBUG == true)
 				{
-					printf("// ----------------------------------- //\n");
-					printf("//   	Jetbrains Killer debug mode    //\n");
-					printf("// ----------------------------------- //\n");
-					printf("\n");
 					printf("| path |\t%s\n", processDataArray[i].fullStr);
 					printf("| pid |\t%s\n", processDataArray[i].pid);
 					printf("| command |\t%s\n", killCommand);
+					printf("| ides open |\t%i\n", IDE_COUNT);
 				}
 
 
