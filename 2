@@ -33,28 +33,25 @@ const char ides[][IDE_NAME_LEN] = {
 	"ryder"
 };
 
-typedef struct CompareDatas {
+typedef struct CompareData {
 	char tokenName;
 	char processStr;
-} CompareData;
+} comapreData;
 
-int compareProcessOutputToToken(
+char* compareProcessOutputToToken(
 		const char ideTokens[IDE_NAME_LEN],
 		char *processStr,
-		char *tokenResult,
-		CompareData *compareData
+		char *tokenResult
 		)
 {
 	for(int i = 0; i < sizeof(&ideTokens)/sizeof(ideTokens[0]); i++)
        	{
 		tokenResult = strstr(processStr, &ideTokens[i]);
 		if(tokenResult != NULL) {
-			strcpy(&compareData->tokenName, &ideTokens[i]);
-		        strcpy(&compareData->processStr, processStr);
-			return 0;	
+			return processStr;  
 		}
 	}
-	return 1;	
+	return NULL;	
 }
 
 int main()
@@ -67,6 +64,7 @@ int main()
         char *hasToken;
         char pid[30];
 	char killCommand[20] = "sudo kill -9 ";
+
 	psOutP = popen("ps -A", "r");
 	
 	if(psOutP == NULL)
@@ -82,14 +80,7 @@ int main()
 
 		for(int i = 0; i < SIZE_OF_IDES(ides); i++)
 		{
-			int isAssigned;
-			CompareData compareResults;
-			isAssigned = compareProcessOutputToToken(ides[i], processData, hasToken, &compareResults);
-			if(isAssigned == 1)
-			{
-				printf("Error: could not find path of Jetbrains process\n");
-				exit(1);
-			}
+			processData = compareProcessOutputToToken(ides[i], processData, hasToken);
 		}
 		if(hasToken != NULL) 
 		{
