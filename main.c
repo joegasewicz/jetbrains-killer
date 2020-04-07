@@ -9,6 +9,7 @@
 #define PATH_LEN 2500
 #define PROCESS_DATA_LEN 1000
 #define JETBRAINS_IDES_LEN 10
+#define IDE_NAME_LEN 9
 // Macros
 #define SIZE_OF_PROCESS_DATA_ARRAY(x) (sizeof(x)/sizeof((x)[0]))
 
@@ -20,7 +21,7 @@ struct ProcessData {
 	bool isKilled; 
 };
 
-const char ides[9][9] = {
+const char ides[9][IDE_NAME_LEN] = {
 	"pycharm",
 	"webstorm",
 	"clion",
@@ -31,6 +32,25 @@ const char ides[9][9] = {
 	"ryder"
 };
 
+typedef struct CompareData {
+	char tokenName;
+	char processStr;
+} comapreData;
+
+void compareProcessOutputToToken(
+		char *ideTokens[9][IDE_NAME_LEN],
+		char *processStr,
+		char *tokenResults[PROCESS_DATA_LEN]
+		)
+{
+	for(int i = 0; i < sizeof(ideTokens)/sizeof(ideTokens[0]); i++)
+       	{
+		tokenResult = strstr(*processStr, *ideTokens[i]);
+		if(tokenResult != NULL) {
+			return 
+		}
+	}	
+}
 
 int main()
 {
