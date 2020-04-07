@@ -1,3 +1,10 @@
+// Jetbrains Killer by Joe Gasewicz
+// GNU General Public License v3.0
+// A simple programme to kill any Jetbrains IDE's running on a UNIX like system.
+//
+// Options:-
+// 		DEBUG (defaults to true)
+//
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
