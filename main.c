@@ -34,24 +34,21 @@ const char ides[][IDE_NAME_LEN] = {
 };
 
 typedef struct CompareDatas {
-	char tokenName;
-	char processStr;
+	char *tokenName;
+	char *processStr;
 } CompareData;
 
 int compareProcessOutputToToken(const char ideTokens[], char *processStr, char *tokenResult, CompareData *compareData)
 {
-	printf("debug ----> %s \n", ideTokens);
 	tokenResult = strstr(processStr, ideTokens);
 	if(tokenResult != NULL)
 	{
-		printf("2 ---> \n");
-		strcpy(&compareData->tokenName, ideTokens);
-		printf("3 --> %s \n", processStr);
-	        strcpy(&compareData->processStr, processStr);
-		printf("here--------> 0");
+		compareData->tokenName  = malloc(strlen(ideTokens) + 1);
+		compareData->processStr = malloc(strlen(processStr) + 1);
+		strcpy(compareData->tokenName, ideTokens);
+	        strcpy(compareData->processStr, processStr);
 		return 0;	
 	}
-	printf("here---- END");
 	return 1;	
 }
 
@@ -83,10 +80,10 @@ int main()
 		for(int i = 0; i < SIZE_OF_IDES(ides); i++)
 		{
 			isAssigned = compareProcessOutputToToken(ides[i], processData, hasToken, &compareResults);
-			printf("PASS ----> \n");
+			printf("isAssigned ----> %i\n", isAssigned);
 			if(isAssigned != 1) 
 			{
-				// Get PID
+				printf("inside -----> \n");
 				for(int i = 0; i < strlen(processData); i++)
 		       		{
 					if (processData[i] != ' ')
