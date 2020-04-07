@@ -38,22 +38,20 @@ typedef struct CompareDatas {
 	char processStr;
 } CompareData;
 
-int compareProcessOutputToToken(
-		const char ideTokens[IDE_NAME_LEN],
-		char *processStr,
-		char *tokenResult,
-		CompareData *compareData
-		)
+int compareProcessOutputToToken(const char ideTokens[], char *processStr, char *tokenResult, CompareData *compareData)
 {
-	for(int i = 0; i < sizeof(&ideTokens)/sizeof(ideTokens[0]); i++)
-       	{
-		tokenResult = strstr(processStr, &ideTokens[i]);
-		if(tokenResult != NULL) {
-			strcpy(&compareData->tokenName, &ideTokens[i]);
-		        strcpy(&compareData->processStr, processStr);
-			return 0;	
-		}
+	printf("debug ----> %s \n", ideTokens);
+	tokenResult = strstr(processStr, ideTokens);
+	if(tokenResult != NULL)
+	{
+		printf("2 ---> \n");
+		strcpy(&compareData->tokenName, ideTokens);
+		printf("3 --> %s \n", processStr);
+	        strcpy(&compareData->processStr, processStr);
+		printf("here--------> 0");
+		return 0;	
 	}
+	printf("here---- END");
 	return 1;	
 }
 
@@ -78,38 +76,35 @@ int main()
 
 	while(fgets(processData, MAX_OUTPUT, psOutP) != NULL)
 	{
-		hasToken = strstr(processData, token);
+		//hasToken = strstr(processData, token);
+		int isAssigned;
+		CompareData compareResults;
 
 		for(int i = 0; i < SIZE_OF_IDES(ides); i++)
 		{
-			int isAssigned;
-			CompareData compareResults;
 			isAssigned = compareProcessOutputToToken(ides[i], processData, hasToken, &compareResults);
-			if(isAssigned == 1)
+			printf("PASS ----> \n");
+			if(isAssigned != 1) 
 			{
-				printf("Error: could not find path of Jetbrains process\n");
-				exit(1);
-			}
-		}
-		if(hasToken != NULL) 
-		{
-			// Get PID
-			for(int i = 0; i < strlen(processData); i++)
-		       	{
-				if (processData[i] != ' ')
-			       	{
-					strncat(pid, &processData[i], 1);
-				} 
-				else 
-				{
-					counter += 1;
-					strcpy(processDataArray[counter].fullStr, processData);
-        			        strcpy(processDataArray[counter].pid, pid);
-					break;
+				// Get PID
+				for(int i = 0; i < strlen(processData); i++)
+		       		{
+					if (processData[i] != ' ')
+			       		{
+						strncat(pid, &processData[i], 1);
+					} 
+					else 
+					{
+						counter += 1;
+						strcpy(processDataArray[counter].fullStr, processData);
+        				        strcpy(processDataArray[counter].pid, pid);
+						break;
+					}
 				}
 			}
+
 		}
-		if(strlen(processDataArray[counter].fullStr) != 0) break;
+				if(strlen(processDataArray[counter].fullStr) != 0) break;
 	}
 	
 	if(SIZE_OF_PROCESS_DATA_ARRAY(processDataArray) > 0)
