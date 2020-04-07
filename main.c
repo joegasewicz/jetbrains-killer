@@ -10,8 +10,9 @@
 #define PROCESS_DATA_LEN 1000
 #define JETBRAINS_IDES_LEN 10
 #define IDE_NAME_LEN 9
-// Macros
+
 #define SIZE_OF_PROCESS_DATA_ARRAY(x) (sizeof(x)/sizeof((x)[0]))
+#define SIZE_OF_IDES(i) (sizeof(i)/sizeof((i)[0]))
 
 
 struct ProcessData {
@@ -21,7 +22,7 @@ struct ProcessData {
 	bool isKilled; 
 };
 
-const char ides[9][IDE_NAME_LEN] = {
+const char ides[][IDE_NAME_LEN] = {
 	"pycharm",
 	"webstorm",
 	"clion",
@@ -38,16 +39,16 @@ typedef struct CompareData {
 } comapreData;
 
 void compareProcessOutputToToken(
-		char *ideTokens,
+		const char ideTokens[IDE_NAME_LEN],
 		char *processStr,
 		char *tokenResult
 		)
 {
-	for(int i = 0; i < sizeof(ideTokens)/sizeof(&ideTokens[0]); i++)
+	for(int i = 0; i < sizeof(&ideTokens)/sizeof(ideTokens[0]); i++)
        	{
 		tokenResult = strstr(processStr, &ideTokens[i]);
 		if(tokenResult != NULL) {
-			return 
+			printf("here------> %s", tokenResult);  
 		}
 	}	
 }
@@ -75,6 +76,11 @@ int main()
 	while(fgets(processData, MAX_OUTPUT, psOutP) != NULL)
 	{
 		hasToken = strstr(processData, token);
+
+		for(int i = 0; i < SIZE_OF_IDES(ides); i++)
+		{
+			compareProcessOutputToToken(ides[i], processData, hasToken);
+		}
 		if(hasToken != NULL) 
 		{
 			// Get PID
