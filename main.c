@@ -38,14 +38,14 @@ typedef struct CompareData {
 } comapreData;
 
 void compareProcessOutputToToken(
-		char *ideTokens[9][IDE_NAME_LEN],
+		char *ideTokens,
 		char *processStr,
-		char *tokenResults[PROCESS_DATA_LEN]
+		char *tokenResult
 		)
 {
-	for(int i = 0; i < sizeof(ideTokens)/sizeof(ideTokens[0]); i++)
+	for(int i = 0; i < sizeof(ideTokens)/sizeof(&ideTokens[0]); i++)
        	{
-		tokenResult = strstr(*processStr, *ideTokens[i]);
+		tokenResult = strstr(processStr, &ideTokens[i]);
 		if(tokenResult != NULL) {
 			return 
 		}
